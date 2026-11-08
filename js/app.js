@@ -1163,6 +1163,7 @@
     if (a === 'examen' && b === 'en-curso') return { v: 'examenCurso', nav: 'examen' };
     if (a === 'resultado') return { v: 'resultado', arg: b, nav: 'examen' };
     if (a === 'aprender') return { v: 'aprender', arg: b, nav: innerWidth <= 960 ? 'mas' : 'aprender' };
+    if (a === 'senales') return { v: 'senales', nav: innerWidth <= 960 ? 'mas' : 'aprender' };
     if (a === 'duelo') return { v: 'duelo', arg: h.slice(6), nav: 'practicar' };
     if (a === 'video') return { v: 'video', arg: b, nav: innerWidth <= 960 ? 'mas' : 'aprender' };
     if (V[a]) return { v: a, nav: ['estadisticas', 'logros', 'fuentes', 'ajustes', 'mas'].includes(a) && innerWidth <= 960 ? 'mas' : a };
@@ -1172,6 +1173,7 @@
   function render() {
     const r = ruta();
     if (r.v === 'aprender') V.aprender = window.Aprender.vista;
+    if (r.v === 'senales') { V.senales = window.Aprender.vistaSenales; V.senales.montar = window.Aprender.montarSenales; }
     if (r.v === 'video') { V.video = window.Video.vista; V.video.montar = window.Video.montar; }
     document.body.classList.remove('en-sesion');
     if (r.v !== 'examenCurso') clearInterval(reloj);
@@ -1186,7 +1188,7 @@
     $$('[data-go]').forEach(b => b.addEventListener('click', () => iniciar(JSON.parse(b.dataset.go))));
     if (vista.montar) vista.montar(r.arg);
     if (r.v === 'aprender' && window.Aprender.montar) window.Aprender.montar(r.arg);
-    const titulos = { duelo: 'Reto', camino: 'Camino', video: 'Vídeo-lección', inicio: 'Inicio', practicar: 'Practicar', sesion: 'Practicando', examen: 'Simulacro', examenCurso: 'Simulacro en curso', resultado: 'Resultado', estadisticas: 'Estadísticas', logros: 'Logros', aprender: 'Aprender', fuentes: 'Fuentes', ajustes: 'Ajustes', mas: 'Más' };
+    const titulos = { senales: 'Señales', duelo: 'Reto', camino: 'Camino', video: 'Vídeo-lección', inicio: 'Inicio', practicar: 'Practicar', sesion: 'Practicando', examen: 'Simulacro', examenCurso: 'Simulacro en curso', resultado: 'Resultado', estadisticas: 'Estadísticas', logros: 'Logros', aprender: 'Aprender', fuentes: 'Fuentes', ajustes: 'Ajustes', mas: 'Más' };
     document.title = (titulos[r.v] || 'Inicio') + ' · Luz Verde · Teórico B';
   }
 

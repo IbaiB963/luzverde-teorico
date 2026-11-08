@@ -239,6 +239,7 @@
       <div class="page-head" style="margin-bottom:0"><div class="stack"><span class="eyebrow">Aprender</span><h1 class="h-l">Entiende las normas, no las memorices</h1><p class="muted">Vídeo-lecciones narradas, guías visuales, simuladores y recursos oficiales para los puntos que más se preguntan.</p></div></div>
       <section><div class="section-head"><h2 class="h-m">Vídeo-lecciones</h2><span class="small muted">${Video.LECCIONES.filter(l => M.S.videos[l.id]).length}/${Video.LECCIONES.length} vistas · con voz y subtítulos</span></div>
         <div class="grid g-3 reveal">${Video.LECCIONES.map(Video.tarjeta).join('')}</div></section>
+      <a class="card senal-banner" href="#/senales"><div class="senal-banner-img">${['r2', 'p1', 'r305', 'r402', 's13'].map(f => `<img src="img/senales/${f}.svg" alt="">`).join('')}</div><div><b style="font-size:18px">Catálogo y quiz de señales</b><div class="small muted">${SENALES.length} señales explicadas y un quiz de 10 preguntas para aprenderlas jugando.</div></div>${ico('flecha', 'style="width:20px;height:20px;color:var(--muted);flex:none"')}</a>
       <section><div class="section-head"><h2 class="h-m">Guías y simuladores</h2></div>
       <div class="grid g-3 reveal">${GUIAS.map(g => `<a class="card guide" href="#/aprender/${g.id}">
         <div class="guide-art" style="${g.art ? '' : `background:color-mix(in oklab, ${TEMA[g.tema].color} 12%, var(--bg-2));color:${TEMA[g.tema].color}`}">${g.art ? DIAG[g.art] : `<span style="width:56px;height:56px">${ico('t_' + g.tema)}</span>`}</div>
@@ -258,6 +259,81 @@
       <div style="min-width:0"><b style="font-size:15px">${esc(v.t)}</b><div class="small muted">${esc(v.d)}</div></div>
       <span class="chip chip-ofi">DGT</span></a>`;
   }
+  /* ---------- Catálogo de señales y quiz ---------- */
+  const SENALES = [
+    ['r2', 'Stop', 'Detención obligatoria y ceder el paso.', 'Prioridad'],
+    ['r1', 'Ceda el paso', 'Ceder el paso a los que circulan por la vía a la que se llega.', 'Prioridad'],
+    ['r6', 'Prioridad respecto al sentido contrario', 'En un estrechamiento, usted pasa primero.', 'Prioridad'],
+    ['p1', 'Intersección con prioridad', 'Su vía tiene preferencia sobre la que cruza.', 'Peligro'],
+    ['p3', 'Semáforos', 'Intersección o tramo regulado por semáforos.', 'Peligro'],
+    ['p4', 'Intersección con circulación giratoria', 'Se acerca una glorieta.', 'Peligro'],
+    ['p13a', 'Curva peligrosa hacia la derecha', 'Reduzca la velocidad antes de la curva.', 'Peligro'],
+    ['p17', 'Estrechamiento de calzada', 'La calzada se estrecha más adelante.', 'Peligro'],
+    ['p20', 'Peatones', 'Paso de peatones o zona con peatones.', 'Peligro'],
+    ['p50', 'Otros peligros', 'Peligro sin señal propia; mire el panel.', 'Peligro'],
+    ['r100', 'Circulación prohibida', 'Prohibida a todos los vehículos en ambos sentidos.', 'Prohibición'],
+    ['r101', 'Entrada prohibida', 'Prohibido entrar a todos los vehículos.', 'Prohibición'],
+    ['r302', 'Giro a la derecha prohibido', 'No se puede girar a la derecha.', 'Prohibición'],
+    ['r303', 'Giro a la izquierda prohibido', 'No se puede girar a la izquierda.', 'Prohibición'],
+    ['r305', 'Adelantamiento prohibido', 'Prohibido adelantar a vehículos de motor (salvo de dos ruedas).', 'Prohibición'],
+    ['r301-50', 'Velocidad máxima', 'No superar la velocidad indicada.', 'Prohibición'],
+    ['r307', 'Parada y estacionamiento prohibidos', 'Ni parar ni estacionar en ese lado.', 'Prohibición'],
+    ['r308', 'Estacionamiento prohibido', 'Se puede parar, no estacionar.', 'Prohibición'],
+    ['r500', 'Fin de prohibiciones', 'Terminan las prohibiciones señalizadas antes.', 'Fin de prohibición'],
+    ['r501-60', 'Fin de la limitación de velocidad', 'Vuelve la velocidad genérica de la vía.', 'Fin de prohibición'],
+    ['r400', 'Sentido obligatorio', 'Solo se puede seguir la dirección de la flecha.', 'Obligación'],
+    ['r401', 'Paso obligatorio', 'Pase el obstáculo por el lado de la flecha.', 'Obligación'],
+    ['r402', 'Sentido giratorio obligatorio', 'Circule en el sentido de las flechas.', 'Obligación'],
+    ['r411-60', 'Velocidad mínima', 'Circule al menos a esa velocidad, salvo causa justificada.', 'Obligación'],
+    ['s13', 'Paso para peatones', 'Indica la situación de un paso de peatones.', 'Indicación']
+  ];
+  function vistaSenales() {
+    const rec = (M.S.records || {}).senales;
+    return `<div class="view stack" style="--gap:22px">
+      <a href="#/aprender" class="small" style="display:inline-flex;gap:6px;align-items:center;text-decoration:none">${ico('atras', 'style="width:16px;height:16px"')}Aprender</a>
+      <div class="page-head" style="margin-bottom:0"><div class="stack"><span class="eyebrow">Señales</span><h1 class="h-l">Catálogo y quiz de señales</h1><p class="muted">Toca una señal para ver qué significa, o ponte a prueba con el quiz.</p></div>
+        <button class="btn btn-primary" data-quiz>${ico('play')}Quiz de señales${rec ? ` · récord ${rec}/10` : ''}</button></div>
+      <div id="quiz"></div>
+      ${['Prioridad', 'Peligro', 'Prohibición', 'Fin de prohibición', 'Obligación', 'Indicación'].map(tipo => `<section><h2 class="h-m" style="margin-bottom:12px">${tipo}</h2>
+        <div class="senal-grid">${SENALES.filter(s => s[3] === tipo).map(([f, n, d]) => `<button class="card senal-card" data-flip><img src="img/senales/${f}.svg" alt="${esc(n)}" loading="lazy"><b>${esc(n)}</b><span class="small muted">${esc(d)}</span></button>`).join('')}</div></section>`).join('')}
+      <p class="tiny muted">Dibujos propios basados en el catálogo oficial de señales (RGC, Anexo I).</p>
+      ${UI.pie()}
+    </div>`;
+  }
+  function montarSenales() {
+    document.querySelectorAll('[data-flip]').forEach(b => b.addEventListener('click', () => b.classList.toggle('girada')));
+    const zona = document.getElementById('quiz');
+    let ronda = 0, ok = 0, orden = [];
+    const pintar = () => {
+      if (ronda >= 10) {
+        const rec = (M.S.records || {}).senales || 0;
+        if (ok > rec) { M.S.records.senales = ok; M.guardar(); }
+        zona.innerHTML = `<div class="card pad-l quiz-fin">${mascota(ok >= 8 ? 'celebra' : ok >= 5 ? 'feliz' : 'animo', 80)}<h2 class="h-l">${ok}/10</h2><p class="muted">${ok > rec ? '¡Nuevo récord!' : ok === 10 ? '¡Perfecto!' : 'Repasa el catálogo de abajo y vuelve a intentarlo.'}</p><button class="btn btn-primary" data-quiz-otra>${ico('repaso')}Otra vez</button></div>`;
+        zona.querySelector('[data-quiz-otra]').addEventListener('click', empezar);
+        return;
+      }
+      const s = orden[ronda];
+      const opciones = M.barajar([s, ...M.barajar(SENALES.filter(x => x !== s)).slice(0, 2)]);
+      zona.innerHTML = `<div class="card pad-l quiz">
+        <div class="row" style="justify-content:space-between"><span class="chip num">${ronda + 1}/10</span><span class="chip chip-ok num">${ok} ✓</span></div>
+        <img src="img/senales/${s[0]}.svg" alt="Señal" class="quiz-img">
+        <b>¿Qué señal es?</b>
+        <div class="opts">${opciones.map((o, i) => `<button class="opt" data-q="${o[0]}"><span class="key">${'ABC'[i]}</span><span>${esc(o[1])}</span><span class="mark"></span></button>`).join('')}</div>
+        <div class="quiz-exp" hidden></div></div>`;
+      zona.querySelectorAll('[data-q]').forEach(b => b.addEventListener('click', () => {
+        if (zona.querySelector('.opts.locked')) return;
+        const bien = b.dataset.q === s[0]; if (bien) ok++;
+        zona.querySelector('.opts').classList.add('locked');
+        zona.querySelectorAll('[data-q]').forEach(x => x.classList.add(x.dataset.q === s[0] ? 'ok' : x === b ? 'bad' : 'dim'));
+        const e = zona.querySelector('.quiz-exp'); e.hidden = false;
+        e.innerHTML = `<p><b>${bien ? '¡Correcto!' : 'Es: ' + esc(s[1])}</b> ${esc(s[2])}</p><button class="btn btn-primary btn-sm" data-sig-q>Siguiente${ico('flecha')}</button>`;
+        e.querySelector('[data-sig-q]').addEventListener('click', () => { ronda++; pintar(); });
+      }));
+    };
+    const empezar = () => { ronda = 0; ok = 0; orden = M.barajar(SENALES).slice(0, 10); pintar(); zona.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+    document.querySelector('[data-quiz]').addEventListener('click', empezar);
+  }
+
   function montar(id) {
     const g = GUIAS.find(x => x.id === id); if (g && g.montar) g.montar();
     document.querySelectorAll('[data-yt]').forEach(a => a.addEventListener('click', ev => {
@@ -266,5 +342,5 @@
     }));
   }
 
-  window.Aprender = { vista, montar, GUIAS, DIAG, VIDEOS };
+  window.Aprender = { vista, montar, GUIAS, DIAG, VIDEOS, vistaSenales, montarSenales, SENALES };
 })();
