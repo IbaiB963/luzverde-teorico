@@ -126,6 +126,7 @@
     libre: { nombre: 'Práctica libre', n: 20 },
     contrarreloj: { nombre: 'Contrarreloj', n: 80 },
     duelo: { nombre: 'Reto entre amigos', n: 10 },
+    experto: { nombre: 'Nivel experto', n: 20 },
     camino: { nombre: 'Camino', n: 8 }
   };
   function falladasIds() { return Object.keys(S.q).filter(id => POR_ID[id] && S.q[id].ultOk === false); }
@@ -155,6 +156,8 @@
     else if (modo === 'reto') { const rnd = semilla('reto-' + hoyStr()); lista = muestreo(b, n, q => (q.d ? 2 : 1), rnd); }
     // Práctica libre: selección al azar, sin tener en cuenta el historial (y nada se guarda).
     else if (modo === 'libre') lista = barajar(opts.tema ? b.filter(q => q.t === opts.tema) : b).slice(0, n);
+    // Nivel experto: solo preguntas marcadas como difíciles (redacción traicionera o detalle fino).
+    else if (modo === 'experto') lista = muestreo(b.filter(q => q.d), n, pesoEstudio);
     else if (modo === 'contrarreloj') lista = muestreo(b, n, pesoEstudio);
     // Reto entre amigos: la semilla del enlace decide las preguntas, así todos responden las mismas.
     else if (modo === 'duelo') lista = barajar(PREGUNTAS.filter(q => !q.rev).sort((a, z) => a.id < z.id ? -1 : 1), semilla('duelo-' + opts.semilla)).slice(0, n);

@@ -201,6 +201,17 @@
     }
     return `<div class="view stack" style="--gap:26px">
       <div class="page-head" style="margin-bottom:0"><div class="stack"><span class="eyebrow">Aprender</span><h1 class="h-l">Entiende las normas, no las memorices</h1><p class="muted">Vídeo-lecciones narradas, guías visuales, simuladores y recursos oficiales para los puntos que más se preguntan.</p></div></div>
+      <section class="card video-redes">
+        <div class="video-redes-movil"><video src="video-redes/luzverde-5-errores.mp4" controls playsinline preload="metadata" poster=""></video></div>
+        <div class="stack" style="--gap:12px">
+          <span class="chip" style="color:#db2777;background:color-mix(in oklab, #db2777 12%, transparent)">${ico('play')}Vídeo corto · 39 s</span>
+          <h2 class="h-l">Los 5 errores que más suspenden el teórico</h2>
+          <p class="muted">Ceda el paso, el falso margen de 20 km/h, la tasa de los noveles, las glorietas y el giro a la izquierda: el error y la solución de cada uno, en formato vertical para el móvil.</p>
+          <div class="row wrap-r"><a class="btn btn-primary" href="video-redes/luzverde-5-errores.mp4" download="luzverde-5-errores.mp4">${ico('descargar')}Descargar el vídeo</a>
+          ${navigator.share ? `<button class="btn btn-soft" data-compartir-video>${ico('enlace')}Compartir</button>` : ''}</div>
+          <p class="tiny muted">Puedes subirlo a TikTok, Instagram o WhatsApp. Si quieres voz, añádela en la propia app de TikTok con «Texto a voz».</p>
+        </div>
+      </section>
       <section><div class="section-head"><h2 class="h-m">Vídeo-lecciones</h2><span class="small muted">${Video.LECCIONES.filter(l => M.S.videos[l.id]).length}/${Video.LECCIONES.length} vistas · con voz y subtítulos</span></div>
         <div class="grid g-3 reveal">${Video.LECCIONES.map(Video.tarjeta).join('')}</div></section>
       <a class="card senal-banner" href="#/senales"><div class="senal-banner-img">${['r2', 'p1', 'r305', 'r402', 's13'].map(f => `<img src="img/senales/${f}.svg" alt="">`).join('')}</div><div><b style="font-size:18px">Catálogo y quiz de señales</b><div class="small muted">${SENALES.length} señales explicadas y un quiz de 10 preguntas para aprenderlas jugando.</div></div>${ico('flecha', 'style="width:20px;height:20px;color:var(--muted);flex:none"')}</a>
@@ -300,6 +311,15 @@
 
   function montar(id) {
     const g = GUIAS.find(x => x.id === id); if (g && g.montar) g.montar();
+    const cv = document.querySelector('[data-compartir-video]');
+    if (cv) cv.addEventListener('click', async () => {
+      try {
+        const blob = await (await fetch('video-redes/luzverde-5-errores.mp4')).blob();
+        const archivo = new File([blob], 'luzverde-5-errores.mp4', { type: 'video/mp4' });
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) await navigator.share({ files: [archivo], title: 'Los 5 errores que más suspenden el teórico' });
+        else await navigator.share({ title: 'Luz Verde · Teórico B', url: location.origin + location.pathname });
+      } catch (e) { /* compartir cancelado */ }
+    });
     document.querySelectorAll('[data-yt]').forEach(a => a.addEventListener('click', ev => {
       if (location.protocol === 'file:') return; // enlace normal a YouTube
       ev.preventDefault(); Video.abrirYouTube(a.dataset.yt, a.dataset.ytT);

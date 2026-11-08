@@ -340,6 +340,7 @@
       reto: { ico: 'trofeo', col: 'var(--violet)', bg: 'var(--violet-soft)', t: 'Reto del día', d: '10 preguntas, las mismas para todo el día. +50 XP.', c: retoHecho ? `Hecho hoy: ${retoHecho.ok}/10` : 'Disponible' },
       nuevas: { ico: 'estrella', col: 'var(--ok)', bg: 'var(--ok-soft)', t: 'Nunca vistas', d: 'Preguntas que todavía no has respondido.', c: `${nuevas} sin ver`, off: !nuevas },
       marcadas: { ico: 'bandera', col: 'var(--amber)', bg: 'var(--amber-soft)', t: 'Marcadas', d: 'Las que has guardado para repasar.', c: marc ? `${marc} marcadas` : 'Ninguna marcada', off: !marc },
+      experto: { ico: 'medalla', col: '#b91c1c', bg: 'color-mix(in oklab, #b91c1c 12%, transparent)', t: 'Nivel experto', d: 'Solo preguntas difíciles, con trampas como en el examen.', c: `${M.banco().filter(q => q.d).length} preguntas difíciles` },
       contrarreloj: { ico: 'reloj', col: '#f36a1d', bg: 'color-mix(in oklab, #f36a1d 13%, transparent)', t: 'Contrarreloj', d: '60 segundos: acierta todas las que puedas.', c: (M.S.records || {}).contrarreloj ? `Tu récord: ${M.S.records.contrarreloj}` : 'Sin récord todavía' },
       duelo: { ico: 'usuario', col: '#db2777', bg: 'color-mix(in oklab, #db2777 12%, transparent)', t: 'Reta a un amigo', d: '10 preguntas iguales para todos. Envía el enlace y compara.', c: 'Comparte tu resultado' },
       libre: { ico: 'pluma', col: '#0e7490', bg: 'color-mix(in oklab, #0e7490 12%, transparent)', t: 'Práctica libre', d: 'Te dice qué está bien y qué mal, pero no cuenta para nada.', c: 'Sin presión · no se guarda' }
@@ -366,7 +367,7 @@
           <div class="row wrap-r"><button class="btn btn-primary" data-libre>${ico('play')}Empezar práctica libre</button><button class="btn btn-ghost" data-examen-libre>${ico('examen')}Simulacro libre</button></div>
         </div>
       </section>
-      <div class="grid g-4 reveal" style="margin-top:22px">${['rapido', 'contrarreloj', 'duelo', 'repaso', 'falladas', 'dificiles', 'reto', 'nuevas', 'marcadas'].map(tarjetaModo).join('')}
+      <div class="grid g-4 reveal" style="margin-top:22px">${['rapido', 'experto', 'contrarreloj', 'duelo', 'repaso', 'falladas', 'dificiles', 'reto', 'nuevas', 'marcadas'].map(tarjetaModo).join('')}
         <a class="card mode" href="#/examen"><span class="mode-ico" style="background:var(--ink);color:var(--bg)">${ico('examen')}</span><h3>Simulacro de examen</h3><p>30 preguntas, 30 minutos, máximo 3 fallos.</p><span class="count">Condiciones del examen real</span></a>
       </div>
       <div class="section">

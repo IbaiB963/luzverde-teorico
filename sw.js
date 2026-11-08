@@ -2,7 +2,7 @@
    - Núcleo (HTML, CSS, JS, datos, iconos): se guarda al instalar y se actualiza en segundo plano.
    - Imágenes: se guardan al verlas (o todas a la vez desde Ajustes → Aplicación).
    - Tipografías de Google Fonts: se guardan al primer uso. */
-const VERSION = 'lv-pub-mw76ivkp';
+const VERSION = 'lv-pub-mw77d1ul';
 const NUCLEO = `${VERSION}-nucleo`;
 const MEDIA = 'lv-media-v1';
 const ARCHIVOS = [
@@ -29,6 +29,8 @@ self.addEventListener('fetch', e => {
   // Fuentes: primero caché.
   if (/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) { e.respondWith(primeroCache(req, MEDIA)); return; }
   if (url.origin !== location.origin) return;
+  // Los vídeos se sirven directamente (son grandes y el navegador los pide por partes).
+  if (/\.mp4$/.test(url.pathname)) return;
   // Imágenes: primero caché (no cambian).
   if (/\/img\//.test(url.pathname)) { e.respondWith(primeroCache(req, MEDIA)); return; }
   // Navegación y núcleo: red con respaldo en caché, para recibir actualizaciones cuando hay conexión.
