@@ -1,0 +1,23 @@
+{
+  "name": "Luz Verde · Teórico B",
+  "short_name": "Luz Verde",
+  "description": "Prepara el examen teórico del permiso B: camino por temas, simulacros, vídeo-lecciones y repaso inteligente.",
+  "lang": "es-ES",
+  "start_url": "./index.html#/inicio",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f4ef",
+  "theme_color": "#1846c7",
+  "categories": ["education"],
+  "icons": [
+    { "src": "img/app/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/app/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/app/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Continuar el camino", "url": "./index.html#/camino", "icons": [{ "src": "img/app/icono-192.png", "sizes": "192x192" }] },
+    { "name": "Simulacro de examen", "url": "./index.html#/examen", "icons": [{ "src": "img/app/icono-192.png", "sizes": "192x192" }] },
+    { "name": "Práctica libre", "url": "./index.html#/practicar", "icons": [{ "src": "img/app/icono-192.png", "sizes": "192x192" }] }
+  ]
+}
