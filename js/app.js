@@ -183,6 +183,7 @@
               <a class="btn btn-ghost btn-lg" href="#/examen">${ico('examen')}Simulacro de examen</a>
             </div>
             ${enCurso ? '' : `<p class="small" style="color:rgba(255,255,255,.7)">${esc(sig.sub)}</p>`}
+            <div class="hero-ruta" aria-hidden="true"><i class="c1"></i><i class="c2"></i><i class="c3"></i></div>
             <div class="hero-stats">
               <div class="hero-stat"><b class="num">${nf.format(tot.n)}</b><span>respuestas</span></div>
               <div class="hero-stat"><b class="num">${tot.n ? pct(tot.pct) : '—'}</b><span>acierto global</span></div>
@@ -215,6 +216,8 @@
           <a href="#/logros" class="btn btn-soft btn-sm" style="margin-top:16px">${ico('trofeo')}${Object.keys(M.S.logros).length}/${M.LOGROS.length} logros</a>
         </div>
       </div>
+
+      ${preguntaDelDia()}
 
       <div class="grid g-3">
         ${tarjetaMisiones()}
@@ -261,9 +264,37 @@
     const f = $('[data-fecha-inicio]');
     if (f) f.addEventListener('change', () => { if (!f.value) return; M.S.fechaExamen = f.value; M.guardar(); render(); toast('Fecha guardada', 'Te diremos cuánto practicar cada día', 'calendario'); });
     if (!M.S.bienvenida && !M.totales().n) bienvenida();
+    $$('[data-pdia]').forEach(b => b.addEventListener('click', () => {
+      const q = pdDia(), hoy = M.hoyStr(); M.S.pdia = M.S.pdia || {};
+      if (M.S.pdia[hoy] !== undefined) return;
+      const i = +b.dataset.pdia, ok = i === q.c;
+      M.S.pdia[hoy] = i; M.responder(q.id, ok, 'pdia');
+      sonar(ok ? 'ok' : 'bad'); if (ok) confeti();
+      render(); premiar();
+    }));
   };
 
-  /* ---------- Bloques del inicio ---------- */
+  /* ---------- Pregunta del día (la misma para todos ese día; preferiblemente con imagen) ---------- */
+  function pdDia() {
+    const hoy = M.hoyStr(), conImg = M.banco().filter(q => q.img).sort((a, z) => a.id < z.id ? -1 : 1);
+    if (!conImg.length) return null;
+    let h = 0; for (const ch of hoy) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    return conImg[h % conImg.length];
+  }
+  function preguntaDelDia() {
+    const q = pdDia(); if (!q) return '';
+    const S = M.S, resp = (S.pdia || {})[M.hoyStr()];
+    const hecha = resp !== undefined;
+    return `<section class="card pdia ${hecha ? (resp === q.c ? 'acierto' : 'fallo') : ''}">
+      <div class="pdia-img ${imgSenal(q.img) ? 'senal' : ''}"><img src="${q.img}" alt="Imagen de la pregunta del día"></div>
+      <div class="stack" style="--gap:12px">
+        <div class="row" style="--gap:8px"><span class="chip chip-amber">${ico('estrella')}Pregunta del día</span>${hecha ? `<span class="chip ${resp === q.c ? 'chip-ok' : 'chip-bad'}">${resp === q.c ? '¡Acertada!' : 'Fallada'}</span>` : '<span class="small muted">+10 XP</span>'}</div>
+        <h2 class="h-m" style="line-height:1.3">${esc(q.q)}</h2>
+        <div class="opts ${hecha ? 'locked' : ''}">${q.o.map((o, i) => `<button class="opt ${hecha ? (i === q.c ? 'ok' : i === resp ? 'bad' : 'dim') : ''}" data-pdia="${i}"><span class="key">${LETRAS[i]}</span><span>${esc(o)}</span><span class="mark">${hecha ? ico(i === q.c ? 'check' : 'x') : ''}</span></button>`).join('')}</div>
+        ${hecha ? `<p class="small">${esc(q.e)}</p><p class="tiny muted">Vuelve mañana: habrá otra. ¿Quieres más? <a href="#/practicar">Sigue practicando</a>.</p>` : ''}
+      </div>
+    </section>`;
+  }
   function tarjetaMisiones() {
     const ms = M.misionesHoy(), hechas = ms.filter(x => x.hecha).length;
     return `<div class="card stack" style="--gap:12px">

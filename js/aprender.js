@@ -201,16 +201,14 @@
     }
     return `<div class="view stack" style="--gap:26px">
       <div class="page-head" style="margin-bottom:0"><div class="stack"><span class="eyebrow">Aprender</span><h1 class="h-l">Entiende las normas, no las memorices</h1><p class="muted">Vídeo-lecciones narradas, guías visuales, simuladores y recursos oficiales para los puntos que más se preguntan.</p></div></div>
-      <section class="card video-redes">
-        <div class="video-redes-movil"><video src="video-redes/luzverde-5-errores.mp4" controls playsinline preload="metadata" poster=""></video></div>
-        <div class="stack" style="--gap:12px">
-          <span class="chip" style="color:#db2777;background:color-mix(in oklab, #db2777 12%, transparent)">${ico('play')}Vídeo corto · 39 s</span>
-          <h2 class="h-l">Los 5 errores que más suspenden el teórico</h2>
-          <p class="muted">Ceda el paso, el falso margen de 20 km/h, la tasa de los noveles, las glorietas y el giro a la izquierda: el error y la solución de cada uno, en formato vertical para el móvil.</p>
-          <div class="row wrap-r"><a class="btn btn-primary" href="video-redes/luzverde-5-errores.mp4" download="luzverde-5-errores.mp4">${ico('descargar')}Descargar el vídeo</a>
-          ${navigator.share ? `<button class="btn btn-soft" data-compartir-video>${ico('enlace')}Compartir</button>` : ''}</div>
-          <p class="tiny muted">Puedes subirlo a TikTok, Instagram o WhatsApp. Si quieres voz, añádela en la propia app de TikTok con «Texto a voz».</p>
-        </div>
+      <section><div class="section-head"><h2 class="h-m">Vídeos cortos para compartir</h2><span class="small muted">Formato vertical para TikTok, Instagram o WhatsApp</span></div>
+        <div class="grid g-2">${[['luzverde-quiz', '¿Aprobarías el teórico?', 'Quiz de 5 preguntas con 3 segundos para responder. Reta a tus amigos a comentar su nota.', '49 s'], ['luzverde-5-errores', 'Si haces esto, suspendes', 'Los 5 errores que más suspenden el teórico, con la solución de cada uno.', '39 s']].map(([f, t, d, dur]) => `<div class="card video-redes">
+          <div class="video-redes-movil"><video src="video-redes/${f}.mp4" poster="video-redes/${f}-portada.png" controls playsinline preload="none"></video></div>
+          <div class="stack" style="--gap:10px"><span class="chip" style="color:#db2777;background:color-mix(in oklab, #db2777 12%, transparent)">${ico('play')}Vídeo corto · ${dur}</span>
+            <h3 class="h-m">${t}</h3><p class="small muted">${d}</p>
+            <div class="row wrap-r"><a class="btn btn-primary btn-sm" href="video-redes/${f}.mp4" download="${f}.mp4">${ico('descargar')}Descargar</a>${navigator.share ? `<button class="btn btn-soft btn-sm" data-compartir-video="${f}">${ico('enlace')}Compartir</button>` : ''}</div></div>
+        </div>`).join('')}</div>
+        <p class="tiny muted" style="margin-top:10px">Hechos con los dibujos de la app y música propia, sin derechos de terceros. Si quieres voz, añádela en TikTok con «Texto a voz».</p>
       </section>
       <section><div class="section-head"><h2 class="h-m">Vídeo-lecciones</h2><span class="small muted">${Video.LECCIONES.filter(l => M.S.videos[l.id]).length}/${Video.LECCIONES.length} vistas · con voz y subtítulos</span></div>
         <div class="grid g-3 reveal">${Video.LECCIONES.map(Video.tarjeta).join('')}</div></section>
@@ -311,15 +309,15 @@
 
   function montar(id) {
     const g = GUIAS.find(x => x.id === id); if (g && g.montar) g.montar();
-    const cv = document.querySelector('[data-compartir-video]');
-    if (cv) cv.addEventListener('click', async () => {
+    document.querySelectorAll('[data-compartir-video]').forEach(cv => cv.addEventListener('click', async () => {
       try {
-        const blob = await (await fetch('video-redes/luzverde-5-errores.mp4')).blob();
-        const archivo = new File([blob], 'luzverde-5-errores.mp4', { type: 'video/mp4' });
+        const f = cv.dataset.compartirVideo;
+        const blob = await (await fetch('video-redes/' + f + '.mp4')).blob();
+        const archivo = new File([blob], f + '.mp4', { type: 'video/mp4' });
         if (navigator.canShare && navigator.canShare({ files: [archivo] })) await navigator.share({ files: [archivo], title: 'Los 5 errores que más suspenden el teórico' });
         else await navigator.share({ title: 'Luz Verde · Teórico B', url: location.origin + location.pathname });
       } catch (e) { /* compartir cancelado */ }
-    });
+    }));
     document.querySelectorAll('[data-yt]').forEach(a => a.addEventListener('click', ev => {
       if (location.protocol === 'file:') return; // enlace normal a YouTube
       ev.preventDefault(); Video.abrirYouTube(a.dataset.yt, a.dataset.ytT);

@@ -303,7 +303,29 @@
 .vs-det svg, .vs-v16 svg { filter: drop-shadow(0 1cqw 2cqw rgba(0,0,0,.3)); }
 
 /* Vídeo corto para redes */
-.video-redes { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; background: linear-gradient(135deg, color-mix(in oklab, #db2777 8%, var(--surface)), var(--surface)); }
-.video-redes-movil { width: 230px; aspect-ratio: 9 / 16; border-radius: 26px; overflow: hidden; background: #000; border: 6px solid #111a2e; box-shadow: var(--shadow-3); }
+.video-redes { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; background: linear-gradient(135deg, color-mix(in oklab, #db2777 8%, var(--surface)), var(--surface)); }
+.video-redes-movil { width: 170px; aspect-ratio: 9 / 16; border-radius: 26px; overflow: hidden; background: #000; border: 6px solid #111a2e; box-shadow: var(--shadow-3); }
 .video-redes-movil video { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (max-width: 640px) { .video-redes { grid-template-columns: 1fr; justify-items: center; text-align: center; } .video-redes .row { justify-content: center; } }
+
+/* Cabecera del inicio: carretera con coches que circulan */
+.hero { position: relative; padding-bottom: 84px !important; }
+.hero-ruta { position: absolute; left: 0; right: 0; bottom: 0; height: 54px; background: rgba(5, 12, 35, .38); overflow: hidden; border-radius: 0 0 inherit inherit; pointer-events: none; }
+.hero-ruta::before { content: ""; position: absolute; left: 0; right: -120px; top: 50%; height: 4px; translate: 0 -50%; background: repeating-linear-gradient(90deg, rgba(255,255,255,.6) 0 34px, transparent 34px 70px); animation: rutaLineas 1.4s linear infinite; }
+@keyframes rutaLineas { to { transform: translateX(-70px); } }
+.hero-ruta i { position: absolute; width: 58px; height: 30px; background: center / contain no-repeat; filter: drop-shadow(0 4px 4px rgba(0,0,0,.35)); }
+.hero-ruta .c1 { top: 4px; animation: cocheIzq 9s linear infinite; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58 30'%3E%3Crect x='1' y='2' width='56' height='26' rx='8' fill='%23ffd23f'/%3E%3Cpath d='M40 5q7 10 0 20h-6V5z' fill='%23cfe3ff'/%3E%3Cpath d='M12 6h5v18h-5q-4-9 0-18z' fill='%23cfe3ff' opacity='.7'/%3E%3C/svg%3E"); }
+.hero-ruta .c2 { bottom: 4px; animation: cocheIzq 6.5s linear infinite -3s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58 30'%3E%3Crect x='1' y='2' width='56' height='26' rx='8' fill='%2322c06c'/%3E%3Cpath d='M40 5q7 10 0 20h-6V5z' fill='%23cfe3ff'/%3E%3Cpath d='M12 6h5v18h-5q-4-9 0-18z' fill='%23cfe3ff' opacity='.7'/%3E%3C/svg%3E"); }
+.hero-ruta .c3 { bottom: 4px; animation: cocheIzq 11s linear infinite -7s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58 30'%3E%3Crect x='1' y='2' width='56' height='26' rx='8' fill='%23ff6b5f'/%3E%3Cpath d='M40 5q7 10 0 20h-6V5z' fill='%23cfe3ff'/%3E%3Cpath d='M12 6h5v18h-5q-4-9 0-18z' fill='%23cfe3ff' opacity='.7'/%3E%3C/svg%3E"); }
+@keyframes cocheIzq { from { left: -70px; } to { left: 100%; } }
+.hero-ruta .c1 { transform: scaleX(-1); animation-name: cocheDer; }
+@keyframes cocheDer { from { left: 100%; } to { left: -70px; } }
+
+/* Pregunta del día */
+.pdia { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 24px; align-items: start; border: 2px solid color-mix(in oklab, var(--amber) 45%, var(--line)); background: linear-gradient(135deg, color-mix(in oklab, var(--amber) 9%, var(--surface)), var(--surface) 60%); }
+.pdia.acierto { border-color: color-mix(in oklab, var(--ok) 55%, var(--line)); }
+.pdia.fallo { border-color: color-mix(in oklab, var(--bad) 45%, var(--line)); }
+.pdia-img { border-radius: 18px; overflow: hidden; background: #0f141f; display: grid; place-items: center; aspect-ratio: 1; }
+.pdia-img img { width: 100%; height: 100%; object-fit: contain; }
+.pdia-img.senal { background: var(--surface-2); padding: 24px; }
+@media (max-width: 760px) { .pdia { grid-template-columns: 1fr; } .pdia-img { max-height: 260px; aspect-ratio: auto; } }
