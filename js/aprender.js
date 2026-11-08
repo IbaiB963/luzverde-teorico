@@ -25,47 +25,11 @@
   ];
 
   /* ---------- Diagramas ---------- */
-  const road = '#4b5567', lane = '#f4f1e8';
-  const coche = (x, y, rot, col, id = '') => `<g ${id ? `id="${id}"` : ''} transform="translate(${x} ${y}) rotate(${rot})"><rect x="-9" y="-15" width="18" height="30" rx="5" fill="${col}"/><rect x="-6.5" y="-9" width="13" height="7" rx="2" fill="rgba(255,255,255,.75)"/></g>`;
   const DIAG = {
-    glorieta: `<svg viewBox="0 0 320 240" role="img" aria-label="Animación: un coche entra en la glorieta, circula por el carril exterior y sale señalizando">
-      <rect width="320" height="240" fill="#7fae6a" opacity=".35"/>
-      <rect x="135" y="0" width="50" height="240" fill="${road}"/><rect x="0" y="95" width="320" height="50" fill="${road}"/>
-      <circle cx="160" cy="120" r="78" fill="${road}"/><circle cx="160" cy="120" r="34" fill="#7fae6a"/>
-      <circle cx="160" cy="120" r="56" fill="none" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/>
-      <path id="tray" d="M172 240 L172 196 A68 68 0 0 0 228 132 L320 132" fill="none" stroke="#ffb547" stroke-width="2.5" stroke-dasharray="5 6" opacity=".9"/>
-      <g>${coche(0, 0, 0, '#1846c7')}<animateMotion dur="5s" repeatCount="indefinite" rotate="auto" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#tray"/></animateMotion></g>
-      <g transform="translate(108 120)">${coche(0, 0, 180, '#d4352b')}</g>
-      <text x="8" y="18" font-size="10" fill="#111a2e" font-weight="700">Cede al entrar · carril exterior · intermitente derecho</text>
-    </svg>`,
-    prioridad: `<svg viewBox="0 0 320 240" role="img" aria-label="Intersección sin señalizar: el coche azul cede el paso al rojo, que viene por su derecha">
-      <rect width="320" height="240" fill="#7fae6a" opacity=".35"/>
-      <rect x="130" y="0" width="60" height="240" fill="${road}"/><rect x="0" y="90" width="320" height="60" fill="${road}"/>
-      <line x1="160" y1="0" x2="160" y2="88" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/><line x1="160" y1="152" x2="160" y2="240" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/>
-      <line x1="0" y1="120" x2="128" y2="120" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/><line x1="192" y1="120" x2="320" y2="120" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/>
-      <g>${coche(0, 0, 0, '#1846c7')}<animateTransform attributeName="transform" type="translate" values="175 225;175 168;175 168;175 168;175 -30" keyTimes="0;.25;.6;.7;1" dur="6s" repeatCount="indefinite"/></g>
-      <g>${coche(0, 0, -90, '#d4352b')}<animateTransform attributeName="transform" type="translate" values="340 105;250 105;-40 105;-40 105" keyTimes="0;.25;.6;1" dur="6s" repeatCount="indefinite"/></g>
-      <text x="8" y="18" font-size="10" fill="#111a2e" font-weight="700">Sin señales: cede a quien viene por tu derecha</text>
-    </svg>`,
-    ciclista: `<svg viewBox="0 0 320 200" role="img" aria-label="Adelantamiento a un ciclista dejando 1,5 metros y reduciendo 20 km/h">
-      <rect width="320" height="200" fill="#7fae6a" opacity=".35"/><rect x="0" y="40" width="320" height="120" fill="${road}"/>
-      <line x1="0" y1="100" x2="320" y2="100" stroke="${lane}" stroke-width="3"/>
-      <g transform="translate(170 135)"><circle r="7" fill="none" stroke="#ffb547" stroke-width="2.5" cx="-10"/><circle r="7" fill="none" stroke="#ffb547" stroke-width="2.5" cx="10"/><path d="M-10 0 L0 -10 L10 0 M0 -10 L2 -18" stroke="#ffb547" stroke-width="2.5" fill="none"/></g>
-      <g>${coche(0, 0, 90, '#1846c7')}<animateMotion dur="5s" repeatCount="indefinite" rotate="auto" path="M-20 135 L90 135 C120 135 120 82 150 82 L210 82 C240 82 240 135 270 135 L360 135"/></g>
-      <line x1="170" y1="92" x2="170" y2="125" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 3"/><text x="176" y="112" font-size="12" fill="#fff" font-weight="800">≥ 1,5 m</text>
-      <text x="8" y="22" font-size="10" fill="#111a2e" font-weight="700">Interurbana: 1,5 m y 20 km/h menos que el límite</text>
-    </svg>`,
-    emergencia: `<svg viewBox="0 0 320 210" role="img" aria-label="Carril de emergencia en vías de dos y tres carriles">
-      <rect width="320" height="210" fill="#7fae6a" opacity=".35"/>
-      <rect x="20" y="20" width="110" height="180" fill="${road}"/><line x1="75" y1="20" x2="75" y2="200" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/>
-      ${[50, 100, 150].map(y => coche(40, y, 0, '#1846c7') + coche(110, y, 0, '#1846c7')).join('')}
-      <rect x="57" y="25" width="36" height="170" fill="#ffb547" opacity=".22"/><text x="75" y="15" font-size="11" text-anchor="middle" fill="#111a2e" font-weight="800">2 carriles</text>
-      <rect x="170" y="20" width="135" height="180" fill="${road}"/><line x1="215" y1="20" x2="215" y2="200" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/><line x1="260" y1="20" x2="260" y2="200" stroke="${lane}" stroke-width="2" stroke-dasharray="8 8"/>
-      ${[50, 100, 150].map(y => coche(186, y, 0, '#1846c7') + coche(246, y, 0, '#1846c7') + coche(286, y, 0, '#1846c7')).join('')}
-      <rect x="198" y="25" width="34" height="170" fill="#ffb547" opacity=".22"/><text x="237" y="15" font-size="11" text-anchor="middle" fill="#111a2e" font-weight="800">3 carriles</text>
-      <g>${coche(0, 0, 0, '#d4352b')}<animateTransform attributeName="transform" type="translate" values="75 230;75 -20" dur="4s" repeatCount="indefinite"/></g>
-      <g>${coche(0, 0, 0, '#d4352b')}<animateTransform attributeName="transform" type="translate" values="215 230;215 -20" dur="4s" begin="1s" repeatCount="indefinite"/></g>
-    </svg>`,
+    glorieta: DIBUJO.glorieta(),
+    prioridad: DIBUJO.prioridad(),
+    ciclista: DIBUJO.ciclista(),
+    emergencia: DIBUJO.emergencia(),
     senales: `<div class="grid g-4" style="gap:10px">${[['r2', 'Prioridad', 'Octógono rojo: STOP'], ['r1', 'Prioridad', 'Triángulo invertido: ceda el paso'], ['r101', 'Prohibición', 'Círculo rojo: prohíbe'], ['r402', 'Obligación', 'Círculo azul: obliga'], ['p20', 'Peligro', 'Triángulo rojo: advierte'], ['s13', 'Indicación', 'Cuadrado azul: informa'], ['r307', 'Prohibición', 'Ni parar ni estacionar'], ['r301-50', 'Prohibición', 'Velocidad máxima']].map(([f, c, t]) => `<div class="card flat" style="display:grid;justify-items:center;gap:8px;text-align:center;padding:14px"><img src="img/senales/${f}.svg" alt="${esc(t)}" style="height:74px;width:auto"><span class="chip">${c}</span><span class="small">${t}</span></div>`).join('')}</div>`
   };
 

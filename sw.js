@@ -2,12 +2,12 @@
    - Núcleo (HTML, CSS, JS, datos, iconos): se guarda al instalar y se actualiza en segundo plano.
    - Imágenes: se guardan al verlas (o todas a la vez desde Ajustes → Aplicación).
    - Tipografías de Google Fonts: se guardan al primer uso. */
-const VERSION = 'lv-pub-mw75rvfr';
+const VERSION = 'lv-pub-mw76ivkp';
 const NUCLEO = `${VERSION}-nucleo`;
 const MEDIA = 'lv-media-v1';
 const ARCHIVOS = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css', 'css/v2.css',
-  'data/preguntas.js', 'js/iconos.js', 'js/motor.js', 'js/aprender.js', 'js/lecciones.js', 'js/video.js', 'js/app.js',
+  'data/preguntas.js', 'js/iconos.js', 'js/motor.js', 'js/dibujos.js', 'js/aprender.js', 'js/lecciones.js', 'js/video.js', 'js/app.js',
   'img/app/icono-192.png', 'img/app/icono-512.png', 'img/app/icono-180.png',
   ...['r1', 'r2', 'r101', 'r301-50', 'r305', 'r307', 'r308', 'r402', 's13', 'p20'].map(s => `img/senales/${s}.svg`)
 ];

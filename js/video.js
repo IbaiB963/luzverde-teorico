@@ -45,21 +45,8 @@
     barras: e => { const max = Math.max(...e.items.map(x => x[1])); return `<div class="vs vs-barras"><h3>${esc(e.titulo)}</h3>${e.items.map(([t, v], i) => `<div class="vs-barra"><span>${esc(t)}</span><div><i class="vs-grow" style="--w:${v / max * 100}%;animation-delay:${(i * 1.6 + .3).toFixed(1)}s"></i><b class="vs-in" ${`style="animation-delay:${(i * 1.6 + 1).toFixed(1)}s"`}>${v}</b></div></div>`).join('')}</div>`; },
     jerarquia: e => `<div class="vs vs-jer"><h3>${esc(e.titulo)}</h3>${e.items.map((t, i) => `<div class="vs-in" style="--k:${i};animation-delay:${(i * 1.9 + .4).toFixed(1)}s"><b>${i + 1}</b>${esc(t)}</div>`).join('')}</div>`,
     consejo: e => `<div class="vs vs-consejo"><div class="vs-pop">${mascota(e.estado || 'feliz', 130)}</div><div class="vs-bocadillo vs-in" style="animation-delay:.5s"><b>${esc(e.titulo)}</b><p>${esc(e.texto)}</p></div></div>`,
-    detencion: () => `<div class="vs vs-det"><svg viewBox="0 0 640 230" aria-hidden="true">
-        <rect x="0" y="120" width="640" height="70" fill="#3b4558"/><path d="M0 155h640" stroke="#f4f1e8" stroke-width="3" stroke-dasharray="22 18"/>
-        <rect class="vs-zona r" x="40" y="200" width="200" height="16" rx="8"/><rect class="vs-zona f" x="240" y="200" width="330" height="16" rx="8"/>
-        <text x="140" y="110" text-anchor="middle" class="vs-lbl r">Reacción</text><text x="405" y="110" text-anchor="middle" class="vs-lbl f">Frenado</text>
-        <g class="vs-coche"><rect x="-58" y="-26" width="58" height="26" rx="8" fill="#2f63f0"/><rect x="-46" y="-40" width="34" height="18" rx="6" fill="#2f63f0"/><rect x="-42" y="-37" width="26" height="12" rx="3" fill="#cfe0ff"/><circle cx="-44" cy="0" r="7" fill="#111"/><circle cx="-12" cy="0" r="7" fill="#111"/></g>
-        <path d="M600 118v-40" stroke="#ff5a4e" stroke-width="5"/><circle cx="600" cy="70" r="12" fill="#ff5a4e"/></svg></div>`,
-    v16: () => `<div class="vs vs-v16"><svg viewBox="0 0 640 260" aria-hidden="true">
-        <rect x="0" y="190" width="640" height="70" fill="#3b4558"/><path d="M0 225h640" stroke="#f4f1e8" stroke-width="3" stroke-dasharray="22 18"/>
-        <g transform="translate(200 190)"><path d="M0 -10 Q0 -40 30 -45 L70 -75 Q90 -85 140 -85 L190 -85 Q215 -85 235 -60 L265 -45 Q290 -40 290 -10 Z" fill="#e2e8f0"/>
-        <path d="M80 -70 L135 -78 L135 -50 L60 -50 Z M150 -78 L195 -78 L222 -50 L150 -50 Z" fill="#93a4c3"/>
-        <circle cx="60" cy="-6" r="22" fill="#111"/><circle cx="230" cy="-6" r="22" fill="#111"/><circle cx="60" cy="-6" r="9" fill="#888"/><circle cx="230" cy="-6" r="9" fill="#888"/>
-        <rect x="150" y="-98" width="22" height="14" rx="4" fill="#ffb547" class="vs-baliza"/>
-        <circle cx="161" cy="-98" r="16" fill="none" stroke="#ffb547" stroke-width="3" class="vs-onda"/><circle cx="161" cy="-98" r="16" fill="none" stroke="#ffb547" stroke-width="3" class="vs-onda o2"/></g>
-        <g transform="translate(540 50)" class="vs-pop" style="animation-delay:2.4s"><path d="M-40 10a22 22 0 0 1 8-42 28 28 0 0 1 52-6 20 20 0 0 1 22 30 14 14 0 0 1-8 18Z" fill="#fff"/><text x="0" y="0" text-anchor="middle" font-size="15" font-weight="800" fill="#1846c7">DGT 3.0</text></g>
-        <path d="M372 80 Q440 30 500 50" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6 7" class="vs-in" style="animation-delay:2s"/></svg></div>`,
+    detencion: () => `<div class="vs vs-det">${DIBUJO.detencion()}</div>`,
+    v16: () => `<div class="vs vs-v16">${DIBUJO.v16()}</div>`,
     imagen: e => `<div class="vs vs-imagen"><div class="vs-escena vs-pop"><img src="${e.src}" alt=""></div><div class="vs-lado"><h3 class="vs-in" style="animation-delay:.4s">${esc(e.titulo)}</h3>${(e.items || []).map((t, i) => `<p class="vs-in" ${d(i + 1)}>${esc(t)}</p>`).join('')}</div></div>`,
     pas: () => `<div class="vs vs-pas">${[['P', 'Proteger', '#2f63f0'], ['A', 'Avisar', '#ffb547'], ['S', 'Socorrer', '#ff5a4e']].map(([k, t, c], i) => `<div class="vs-pop" style="animation-delay:${(i * 1.1 + 1.2).toFixed(1)}s;--c:${c}"><b>${k}</b><span>${t}</span></div>`).join('')}</div>`
   };
@@ -153,6 +140,8 @@
     const sc = document.getElementById('vscene'); if (!sc) return;
     sc.innerHTML = ESC[e.tipo](e, P.l);
     sc.classList.remove('vtrans'); void sc.offsetWidth; sc.classList.add('vtrans');
+    // Las animaciones SVG empiezan desde el principio al aparecer la escena.
+    sc.querySelectorAll('svg').forEach(x => { try { x.setCurrentTime(0); } catch (e) { } });
     const ch = document.getElementById('vchapter');
     if (ch) { ch.textContent = `${P.e + 1}/${P.l.escenas.length}`; }
     const semi = document.getElementById('vsemi');

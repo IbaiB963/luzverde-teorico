@@ -141,7 +141,6 @@
 .vs { position: absolute; inset: 0; padding: 5cqw 6cqw; display: grid; align-content: center; gap: 2.4cqw; }
 .vs h2, .vs h3 { font-family: var(--font-d); margin: 0; letter-spacing: -.02em; line-height: 1.05; }
 .vs h3 { font-size: 4.6cqw; }
-.vstage.paused .vs *, .vstage.paused .vs { animation-play-state: paused !important; }
 .vs-pop { animation: pop .6s var(--ease-out) both; }
 .vs-in { animation: entra .6s var(--ease-out) both; }
 .vs-grow { animation: crece 1.2s var(--ease-out) both; }
@@ -299,3 +298,6 @@
 .vs-lado { display: grid; gap: 1.6cqw; }
 .vs-lado h3 { font-size: 5cqw; }
 .vs-lado p { margin: 0; font-size: 3.2cqw; font-weight: 700; background: rgba(255,255,255,.08); padding: 1.4cqw 2cqw; border-radius: 1.6cqw; border-left: .7cqw solid var(--tc); }
+.vs-diag .vs-panel { background: transparent; justify-self: center; width: auto; min-height: 0; height: 100%; display: flex; align-items: center; }
+.vs-diag .vs-panel svg { height: 100%; width: auto; max-width: 100%; border-radius: 2.4cqw; box-shadow: 0 1.5cqw 4cqw rgba(0,0,0,.45); }
+.vs-det svg, .vs-v16 svg { filter: drop-shadow(0 1cqw 2cqw rgba(0,0,0,.3)); }
