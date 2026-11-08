@@ -60,6 +60,7 @@
         <circle cx="161" cy="-98" r="16" fill="none" stroke="#ffb547" stroke-width="3" class="vs-onda"/><circle cx="161" cy="-98" r="16" fill="none" stroke="#ffb547" stroke-width="3" class="vs-onda o2"/></g>
         <g transform="translate(540 50)" class="vs-pop" style="animation-delay:2.4s"><path d="M-40 10a22 22 0 0 1 8-42 28 28 0 0 1 52-6 20 20 0 0 1 22 30 14 14 0 0 1-8 18Z" fill="#fff"/><text x="0" y="0" text-anchor="middle" font-size="15" font-weight="800" fill="#1846c7">DGT 3.0</text></g>
         <path d="M372 80 Q440 30 500 50" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="6 7" class="vs-in" style="animation-delay:2s"/></svg></div>`,
+    imagen: e => `<div class="vs vs-imagen"><div class="vs-escena vs-pop"><img src="${e.src}" alt=""></div><div class="vs-lado"><h3 class="vs-in" style="animation-delay:.4s">${esc(e.titulo)}</h3>${(e.items || []).map((t, i) => `<p class="vs-in" ${d(i + 1)}>${esc(t)}</p>`).join('')}</div></div>`,
     pas: () => `<div class="vs vs-pas">${[['P', 'Proteger', '#2f63f0'], ['A', 'Avisar', '#ffb547'], ['S', 'Socorrer', '#ff5a4e']].map(([k, t, c], i) => `<div class="vs-pop" style="animation-delay:${(i * 1.1 + 1.2).toFixed(1)}s;--c:${c}"><b>${k}</b><span>${t}</span></div>`).join('')}</div>`
   };
 
@@ -68,7 +69,7 @@
   function parar() {
     if (!P) return;
     P.play = false; P.token++;
-    clearTimeout(P.timer); clearTimeout(P.guard);
+    clearTimeout(P.timer); clearTimeout(P.guard); clearInterval(P.karaoke); hablando(false);
     if (synth) synth.cancel();
   }
   window.addEventListener('hashchange', () => { if (!/^#\/video\//.test(location.hash)) { parar(); P = null; } });
@@ -83,7 +84,9 @@
       <a href="#/aprender" class="small" style="display:inline-flex;gap:6px;align-items:center;text-decoration:none">${ico('atras', 'style="width:16px;height:16px"')}Aprender</a>
       <div class="page-head" style="margin-bottom:0"><div class="stack"><span class="eyebrow">Vídeo-lección ${i + 1} de ${L.length} · ${T(l).nombre}</span><h1 class="h-l">${esc(l.t)}</h1></div></div>
       <div class="player" id="player" style="--tc:${T(l).color}">
-        <div class="vstage" id="vstage"><div id="vscene"></div>
+        <div class="vstage" id="vstage"><div class="vfondo"><i></i><i></i><i></i></div><div id="vscene"></div>
+          <div class="vsemi" id="vsemi">${mascota('feliz', 70)}</div>
+          <div class="vchapter" id="vchapter"></div>
           <button class="vbig" data-vplay aria-label="Reproducir">${ico('reproducir')}</button>
           <div class="vend" id="vend" hidden></div>
         </div>
@@ -149,6 +152,11 @@
     const e = P.l.escenas[P.e];
     const sc = document.getElementById('vscene'); if (!sc) return;
     sc.innerHTML = ESC[e.tipo](e, P.l);
+    sc.classList.remove('vtrans'); void sc.offsetWidth; sc.classList.add('vtrans');
+    const ch = document.getElementById('vchapter');
+    if (ch) { ch.textContent = `${P.e + 1}/${P.l.escenas.length}`; }
+    const semi = document.getElementById('vsemi');
+    if (semi) { semi.innerHTML = mascota(e.estado || (P.e === P.l.escenas.length - 1 ? 'celebra' : 'feliz'), 70); semi.hidden = e.tipo === 'consejo' || e.tipo === 'portada'; }
     document.getElementById('vend').hidden = true;
     document.getElementById('vstage').classList.toggle('paused', !P.play);
     pintarSub(); pintarBarra();
@@ -157,8 +165,11 @@
     const s = document.getElementById('vsub'); if (!s) return;
     const fs = frases(P.l.escenas[P.e].voz);
     s.hidden = !P.cc;
-    s.innerHTML = P.cc ? `<span>${esc(fs[Math.min(P.f, fs.length - 1)])}</span>` : '';
+    s.innerHTML = P.cc ? `<span class="vfrase">${fs[Math.min(P.f, fs.length - 1)].split(/(\s+)/).map(w => /^\s+$/.test(w) ? w : `<span class="vw">${esc(w)}</span>`).join('')}</span>` : '';
   }
+  // Resalta en los subtítulos las palabras ya dichas (karaoke).
+  function marcarPalabras(n) { document.querySelectorAll('#vsub .vw').forEach((w, k) => w.classList.toggle('dicha', k < n)); }
+  function hablando(si) { const st = document.getElementById('vstage'); if (st) st.classList.toggle('hablando', !!si); }
   function pintarBarra() {
     const n = frases(P.l.escenas[P.e].voz).length;
     document.querySelectorAll('#vbar [data-vir]').forEach((b, k) => {
@@ -199,12 +210,19 @@
     }
     pintarSub(); pintarBarra();
     const texto = fs[P.f];
-    const siguiente = () => { if (tok !== P.token) return; clearTimeout(P.guard); P.f++; P.timer = setTimeout(() => decir(tok), 160); };
-    if (P.mute || !synth) { P.timer = setTimeout(siguiente, durTexto(texto, P.vel)); return; }
+    const palabras = texto.split(/\s+/).length;
+    clearInterval(P.karaoke);
+    const siguiente = () => { if (tok !== P.token) return; clearTimeout(P.guard); clearInterval(P.karaoke); marcarPalabras(palabras); hablando(false); P.f++; P.timer = setTimeout(() => decir(tok), 320); };
+    // Sin voz (o con voces que no informan de cada palabra) el resaltado avanza a ritmo de lectura.
+    const karaokeTiempo = ms => { let k = 0; const paso = ms / palabras; P.karaoke = setInterval(() => { if (tok !== P.token) return clearInterval(P.karaoke); marcarPalabras(++k); if (k >= palabras) clearInterval(P.karaoke); }, paso); };
+    if (P.mute || !synth) { hablando(true); karaokeTiempo(durTexto(texto, P.vel) * .9); P.timer = setTimeout(siguiente, durTexto(texto, P.vel)); return; }
     const u = new SpeechSynthesisUtterance(texto);
     const v = mejorVoz();
     if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'es-ES';
-    u.rate = P.vel; u.pitch = 1;
+    u.rate = P.vel * .97; u.pitch = 1.02;
+    let conLimites = false;
+    u.onstart = () => { hablando(true); setTimeout(() => { if (!conLimites && tok === P.token) karaokeTiempo(durTexto(texto, P.vel) * .8); }, 700); };
+    u.onboundary = ev => { if (ev.name && ev.name !== 'word') return; conLimites = true; clearInterval(P.karaoke); marcarPalabras(texto.slice(0, ev.charIndex).split(/\s+/).filter(Boolean).length + 1); };
     u.onend = siguiente;
     u.onerror = ev => { if (ev.error === 'interrupted' || ev.error === 'canceled') return; P.timer = setTimeout(siguiente, durTexto(texto, P.vel) * .6); };
     // Si la voz se queda colgada (pasa con algunas voces en línea), seguimos por tiempo.

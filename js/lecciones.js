@@ -88,5 +88,51 @@ window.LECCIONES = [
       { tipo: 'cifras', items: [['112', 'lugar exacto · heridos · riesgos']], voz: 'Avisar: llama al uno, uno, dos, e indica el lugar exacto, con la carretera y el punto kilométrico, cuántos heridos hay, y si existe algún riesgo, como fuego o mercancías peligrosas.' },
       { tipo: 'lista', titulo: 'Socorrer', items: ['No muevas a los heridos salvo peligro', 'No quites el casco a un motorista', 'No des de beber', 'Abriga y tranquiliza'], voz: 'Socorrer: no muevas a los heridos salvo que corran un peligro inminente, no le quites el casco a un motorista, no les des de beber, y abrígalos y tranquilízalos hasta que llegue la ayuda.' }
     ]
+  },
+  {
+    id: 'quienpasa', tema: 'prioridad', t: '¿Quién pasa primero?', d: 'Cinco cruces típicos del examen, resueltos paso a paso.',
+    escenas: [
+      { tipo: 'portada', titulo: '¿Quién pasa primero?', sub: 'Cruces del examen', voz: 'Vamos a resolver juntos cinco cruces de los que caen en el examen. Fíjate siempre en el coche A, que eres tú.' },
+      { tipo: 'imagen', src: 'img/escenas/e01.svg', titulo: 'Sin señales', items: ['B viene por tu derecha', 'Pasa B'], voz: 'Primer cruce, sin señales. El coche B se acerca por tu derecha, así que tienes que cederle el paso. Pasa B.' },
+      { tipo: 'imagen', src: 'img/escenas/e03.svg', titulo: 'Tres coches', items: ['B no tiene a nadie a su derecha', 'Orden: B, A y C'], voz: 'Con tres coches, busca al que no tiene a nadie a su derecha: es B, y pasa primero. Después A, y por último C, que tiene a A a su derecha.' },
+      { tipo: 'imagen', src: 'img/escenas/e04.svg', titulo: 'La señal manda', items: ['Tienes un stop', 'Pasa C aunque venga por tu izquierda'], voz: 'Cuidado: si tienes un stop, la señal manda sobre la regla de la derecha. Te detienes y cedes el paso a C, aunque venga por tu izquierda.' },
+      { tipo: 'imagen', src: 'img/escenas/e05.svg', titulo: 'Girar a la izquierda', items: ['D viene de frente y sigue recto', 'Pasa D'], voz: 'Si vas a girar a la izquierda, cedes el paso a los que vienen de frente. Aquí pasa primero D.' },
+      { tipo: 'imagen', src: 'img/escenas/e08.svg', titulo: 'Vehículo prioritario', items: ['Ambulancia con luces y sirena', 'Pasa la ambulancia'], voz: 'Y una ambulancia con las luces y la sirena encendidas pasa siempre primero, venga por donde venga. Facilítale el paso.' }
+    ]
+  },
+  {
+    id: 'luces', tema: 'alumbrado', t: 'Qué luz llevo', d: 'Cruce, carretera, antiniebla y emergencia sin dudas.',
+    escenas: [
+      { tipo: 'portada', titulo: 'Qué luz llevo', sub: 'Alumbrado', voz: 'Las luces salen mucho en el examen. Te lo dejo claro en un minuto.' },
+      { tipo: 'lista', titulo: 'Luz de cruce, también de día', items: ['Túneles señalizados', 'Carriles reversibles o adicionales', 'Motocicletas, siempre'], voz: 'La luz de cruce es obligatoria también de día en los túneles señalizados, en los carriles reversibles o adicionales, y en las motocicletas siempre.' },
+      { tipo: 'lista', titulo: 'Luz de carretera', items: ['De noche, en vías sin iluminar', 'Nunca si puedes deslumbrar', 'Nunca con el vehículo parado'], voz: 'La luz de carretera, la larga, se usa de noche en vías sin iluminar, pero nunca si puedes deslumbrar a alguien, ni con el vehículo parado o estacionado.' },
+      { tipo: 'lista', titulo: 'Antiniebla trasera', items: ['Niebla espesa', 'Lluvia muy intensa', 'Nevada densa, humo o polvo'], voz: 'La antiniebla trasera solo se enciende con condiciones muy desfavorables: niebla espesa, lluvia muy intensa, nevada densa, o nubes de humo o polvo. Si no, deslumbra al de detrás.' },
+      { tipo: 'consejo', estado: 'piensa', titulo: 'Si te deslumbran', texto: 'Reduce la velocidad y mira al borde derecho de la calzada.', voz: 'Y si te deslumbran, no respondas con las largas: reduce la velocidad y mira hacia el borde derecho de la calzada hasta recuperar la visión.' }
+    ]
+  },
+  {
+    id: 'aparcar', tema: 'estacionamiento', t: 'Parar, aparcar y detenerse', d: 'Las diferencias que más se preguntan y las líneas amarillas.',
+    escenas: [
+      { tipo: 'cifras', items: [['Detención', 'te obliga el tráfico'], ['Parada', 'menos de 2 minutos y tú dentro'], ['Estacionar', 'todo lo demás']], voz: 'Tres palabras que el examen adora. Detención: cuando te obliga el tráfico o una señal. Parada: menos de dos minutos sin bajarte. Y estacionamiento: todo lo demás.' },
+      { tipo: 'senales', titulo: 'Señales azules y rojas', items: [['r307', 'Ni parar ni estacionar'], ['r308', 'Parar sí, estacionar no']], voz: 'La señal con un aspa roja prohíbe parar y estacionar. La que tiene una sola raya prohíbe estacionar, pero puedes parar.' },
+      { tipo: 'lista', titulo: 'Líneas amarillas', items: ['Continua: ni parar ni estacionar', 'Discontinua: parar sí, estacionar no', 'Zigzag: lugar reservado'], voz: 'Con las líneas amarillas pasa lo mismo. La continua prohíbe parar y estacionar, la discontinua solo estacionar, y el zigzag marca un lugar reservado, como una parada de autobús.' },
+      { tipo: 'consejo', estado: 'feliz', titulo: 'En pendiente', texto: 'Bajando, marcha atrás. Subiendo, primera. Y freno de mano siempre.', voz: 'Truco final: si estacionas en pendiente, deja metida la marcha atrás si el coche mira hacia abajo, la primera si mira hacia arriba, y pon siempre el freno de mano.' }
+    ]
+  },
+  {
+    id: 'adelantar', tema: 'adelantamiento', t: 'Cuándo no puedes adelantar', d: 'Los sitios prohibidos y las excepciones trampa.',
+    escenas: [
+      { tipo: 'lista', titulo: 'Prohibido adelantar', items: ['Curvas y rasantes sin visibilidad', 'Pasos de peatones señalizados', 'Intersecciones y sus proximidades', 'Túneles con un carril por sentido'], voz: 'Está prohibido adelantar en curvas y cambios de rasante sin visibilidad, en los pasos de peatones señalizados, en las intersecciones y sus proximidades, y en los túneles con un solo carril por sentido.' },
+      { tipo: 'senales', titulo: 'La señal', items: [['r305', 'Adelantamiento prohibido'], ['r500', 'Fin de prohibiciones']], voz: 'Esta señal prohíbe adelantar a vehículos de motor, salvo los de dos ruedas, hasta la señal de fin de prohibición.' },
+      { tipo: 'lista', titulo: 'Las trampas', items: ['Nunca puedes superar el límite para adelantar', 'Por la derecha: si el de delante gira a la izquierda', 'Si te adelantan: derecha y sin acelerar'], voz: 'Y las trampas: nunca puedes superar el límite de velocidad para adelantar. Se adelanta por la derecha si el de delante va a girar a la izquierda. Y si te adelantan a ti, te ciñes a la derecha y no aceleras.' }
+    ]
+  },
+  {
+    id: 'distracciones', tema: 'factor', t: 'Sueño, móvil y distracciones', d: 'Lo que más accidentes causa y cómo evitarlo.',
+    escenas: [
+      { tipo: 'cifras', items: [['×4', 'riesgo al hablar por el móvil'], ['140 m', 'a ciegas leyendo 5 s a 100 km/h']], voz: 'Hablar por el móvil multiplica por cuatro el riesgo de accidente. Y leer un mensaje cinco segundos a cien por hora es recorrer unos ciento cuarenta metros a ciegas.' },
+      { tipo: 'lista', titulo: 'Señales de sueño', items: ['Bostezos y parpadeos', 'Te cuesta mantener el carril', 'No recuerdas los últimos kilómetros'], voz: 'Si bostezas, parpadeas mucho, te cuesta mantener el carril o no recuerdas los últimos kilómetros, tienes sueño. Y el café o abrir la ventanilla no lo solucionan.' },
+      { tipo: 'consejo', estado: 'animo', titulo: 'La solución', texto: 'Para y descansa. Cada 2 horas o 200 km, aunque estés bien.', voz: 'La única solución es parar y descansar. Lo ideal es hacerlo cada dos horas o doscientos kilómetros, aunque te encuentres bien. Y el móvil, en silencio y lejos de la mano.' }
+    ]
   }
 ];

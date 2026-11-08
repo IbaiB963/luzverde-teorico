@@ -2,7 +2,7 @@
    - Núcleo (HTML, CSS, JS, datos, iconos): se guarda al instalar y se actualiza en segundo plano.
    - Imágenes: se guardan al verlas (o todas a la vez desde Ajustes → Aplicación).
    - Tipografías de Google Fonts: se guardan al primer uso. */
-const VERSION = 'lv-pub-mw74i77z';
+const VERSION = 'lv-pub-mw75rvfr';
 const NUCLEO = `${VERSION}-nucleo`;
 const MEDIA = 'lv-media-v1';
 const ARCHIVOS = [

@@ -92,7 +92,24 @@
   window.TEMA = Object.fromEntries(window.TEMAS.map(t => [t.id, t]));
 
   /* Semi, la mascota: un semáforo con cara. Estados: feliz, celebra, piensa, animo. */
-  window.mascota = function (estado = 'feliz', size = 96) {
+  // Complementos del garaje de Semi (se desbloquean por nivel).
+  window.ACCESORIOS = [
+    { id: '', nombre: 'Sin complemento', nivel: 1 },
+    { id: 'gorra', nombre: 'Gorra de piloto', nivel: 2 },
+    { id: 'gafas', nombre: 'Gafas de sol', nivel: 3 },
+    { id: 'pajarita', nombre: 'Pajarita', nivel: 5 },
+    { id: 'casco', nombre: 'Casco de carreras', nivel: 7 },
+    { id: 'corona', nombre: 'Corona de campeón', nivel: 10 }
+  ];
+  const PIEZAS = {
+    gorra: '<path d="M30 30Q30 4 60 4Q90 4 90 30Z" fill="#e0392f"/><path d="M84 26Q104 26 110 32L86 32Z" fill="#b4231b"/><circle cx="60" cy="6" r="4" fill="#fff"/><path d="M44 22h32" stroke="#fff" stroke-width="3" opacity=".6"/>',
+    gafas: '<rect x="33" y="57" width="25" height="18" rx="7" fill="#111a2e"/><rect x="62" y="57" width="25" height="18" rx="7" fill="#111a2e"/><path d="M58 63h4" stroke="#111a2e" stroke-width="3"/><path d="M37 61l7 0" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".7"/><path d="M66 61l7 0" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>',
+    pajarita: '<path d="M60 118 44 110V128Z M60 118 76 110V128Z" fill="#e0392f"/><circle cx="60" cy="118" r="4" fill="#b4231b"/>',
+    casco: '<path d="M20 52Q20 2 60 2Q100 2 100 52L100 44Q60 30 20 44Z" fill="#facc15"/><path d="M20 52Q20 2 60 2Q100 2 100 52" fill="none" stroke="#ca8a04" stroke-width="3"/><path d="M28 30Q60 18 92 30" stroke="#111a2e" stroke-width="6" fill="none"/><path d="M58 4V20" stroke="#e0392f" stroke-width="5"/>',
+    corona: '<path d="M36 22 40 -2 52 12 60 -6 68 12 80 -2 84 22Z" fill="#fbbf24" stroke="#d97706" stroke-width="2" stroke-linejoin="round"/><circle cx="60" cy="8" r="3.5" fill="#e0392f"/><circle cx="46" cy="14" r="2.5" fill="#22c06c"/><circle cx="74" cy="14" r="2.5" fill="#2f63f0"/>'
+  };
+  window.mascota = function (estado = 'feliz', size = 96, accesorio) {
+    if (accesorio === undefined) { try { accesorio = window.M && M.S.ajustes.accesorio; } catch (e) { accesorio = ''; } }
     const luz = { feliz: 2, celebra: 2, piensa: 1, animo: 0 }[estado] ?? 2;
     const col = ['#ff5a4e', '#ffb547', '#22c06c'];
     const boca = {
@@ -106,7 +123,7 @@
       : '<path d="M24 82 12 96M96 82l12 14" stroke="#24345e" stroke-width="7" stroke-linecap="round"/>';
     const mirada = estado === 'piensa' ? -3 : 0;
     const cejas = estado === 'animo' ? '<path d="M40 52l12 4M80 52l-12 4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>' : '';
-    return `<svg class="semi semi-${estado}" viewBox="0 0 120 140" width="${size}" height="${size * 140 / 120}" aria-hidden="true">
+    return `<svg class="semi semi-${estado}" viewBox="0 -8 120 148" width="${size}" height="${size * 148 / 120}" aria-hidden="true">
       <ellipse cx="60" cy="134" rx="30" ry="5" fill="rgba(0,0,0,.12)"/>
       ${brazos}
       <path d="M46 120v10M74 120v10" stroke="#24345e" stroke-width="7" stroke-linecap="round"/>
@@ -120,7 +137,8 @@
       <circle cx="${47 + mirada}" cy="${68 + mirada}" r="5" fill="#111a2e"/><circle cx="${75 + mirada}" cy="${68 + mirada}" r="5" fill="#111a2e"/>
       <circle cx="${49 + mirada}" cy="${65 + mirada}" r="1.8" fill="#fff"/><circle cx="${77 + mirada}" cy="${65 + mirada}" r="1.8" fill="#fff"/></g>
       <circle cx="36" cy="82" r="5" fill="#ff8b80" opacity=".45"/><circle cx="84" cy="82" r="5" fill="#ff8b80" opacity=".45"/>
-      ${boca}
+      <g class="semi-boca">${boca}</g>
+      ${accesorio && PIEZAS[accesorio] ? PIEZAS[accesorio] : ''}
     </svg>`;
   };
 })();

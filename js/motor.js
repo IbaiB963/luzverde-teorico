@@ -21,7 +21,7 @@
     q: {}, dias: {}, examenes: [], logros: {}, marcadas: {}, retos: {},
     camino: {}, misiones: {}, videos: {}, fechaExamen: '', records: {},
     examenActivo: null,
-    ajustes: { incluirPuntos: true, soloOficiales: false, tema: 'auto', sonido: true, voz: '', vozVel: 1 }
+    ajustes: { incluirPuntos: true, soloOficiales: false, tema: 'auto', sonido: true, voz: '', vozVel: 1, accesorio: '' }
   });
   let S;
   let almacenOk = true;

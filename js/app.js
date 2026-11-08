@@ -60,7 +60,11 @@
     sonar('fiesta'); confeti();
     const ov = document.createElement('div');
     ov.className = 'overlay';
-    ov.innerHTML = `<div class="modal levelup" role="dialog" aria-modal="true" aria-labelledby="lvt">${mascota('celebra', 110)}<span class="eyebrow">¡Subes de nivel!</span><h3 class="h-xl num" id="lvt">Nivel ${n}</h3><p class="muted">Cada respuesta te acerca al aprobado. Sigue así.</p><button class="btn btn-primary btn-lg" data-r>Continuar</button></div>`;
+    const acc = ACCESORIOS.find(a => a.nivel === n);
+    ov.innerHTML = `<div class="modal levelup" role="dialog" aria-modal="true" aria-labelledby="lvt">${mascota('celebra', 110, acc ? acc.id : undefined)}<span class="eyebrow">¡Subes de nivel!</span><h3 class="h-xl num" id="lvt">Nivel ${n}</h3>
+      <p class="muted">${acc ? `Has desbloqueado <b>${acc.nombre}</b> para Semi.` : 'Cada respuesta te acerca al aprobado. Sigue así.'}</p>
+      <div class="row" style="justify-content:center">${acc ? `<button class="btn btn-soft btn-lg" data-poner="${acc.id}">Ponérselo</button>` : ''}<button class="btn btn-primary btn-lg" data-r>Continuar</button></div></div>`;
+    const pon = $('[data-poner]', ov); if (pon) pon.addEventListener('click', () => { M.S.ajustes.accesorio = pon.dataset.poner; M.guardar(); ov.remove(); render(); });
     const cerrar = () => ov.remove();
     ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-r]')) cerrar(); });
     document.body.appendChild(ov); $('[data-r]', ov).focus();
@@ -453,14 +457,14 @@
     <div class="sesion view">
       <div class="sesion-top">
         <button class="btn btn-ghost btn-icon" data-salir title="Salir">${ico('x')}</button>
-        ${barra((sesion.i + (contestada ? 1 : 0)) / sesion.ids.length, sesion.libre ? 'libre' : '')}
+        ${rutaProgreso((sesion.i + (contestada ? 1 : 0)) / sesion.ids.length, sesion.libre)}
         ${sesion.combo >= 3 ? `<span class="combo num" title="Aciertos seguidos">${ico('llama')}${sesion.combo}</span>` : ''}
         ${sesion.limite ? `<span class="timer num" id="crono">${ico('reloj')}<span>${Math.max(0, Math.ceil((sesion.limite - Date.now()) / 1000))}</span></span><span class="chip chip-ok num">${sesion.aciertos} ✓</span>` : ''}
         ${sesion.limite ? '' : `<span class="num small" style="font-weight:800">${sesion.i + 1}/${sesion.ids.length}</span>`}
       </div>
       ${sesion.rival ? `<div class="libre-aviso" style="color:#db2777;background:color-mix(in oklab, #db2777 10%, transparent)">${ico('usuario')}${esc(sesion.rival.nombre || 'Tu amigo')} sacó ${sesion.rival.p}/10. ¡A por ello!</div>` : ''}
       ${sesion.libre ? `<div class="libre-aviso">${ico('pluma')}Práctica libre: no cuenta para tu progreso</div>` : ''}
-      <article class="qcard">
+      <article class="qcard ${contestada ? '' : 'nueva'}">
         <div class="qgrid ${q.img ? '' : 'noimg'}">
           ${q.img ? `<div class="qmedia ${imgSenal(q.img) ? "" : "foto"}"><img src="${q.img}" alt="Imagen de la pregunta" class="${imgSenal(q.img) ? "sign" : ""}" data-zoom loading="eager">${imgSenal(q.img) ? '' : `<button class="btn btn-ghost btn-sm zoom" data-zoom-btn style="background:var(--surface)">${ico('zoom')}Ampliar</button>`}</div>` : ''}
           <div class="qbody">
@@ -486,6 +490,9 @@
       <p class="tiny muted" style="text-align:center;margin-top:14px">${esc(tituloModo)}</p>
     </div>`;
   };
+  // Barra de progreso en forma de carretera, con un coche que avanza hasta la meta.
+  const rutaProgreso = (v, libre) => `<div class="ruta ${libre ? 'libre' : ''}" role="progressbar" aria-valuenow="${Math.round(v * 100)}" aria-valuemin="0" aria-valuemax="100"><i style="width:${(v * 100).toFixed(1)}%"></i><span class="ruta-coche" style="left:${(v * 100).toFixed(1)}%"><svg viewBox="0 0 40 24"><rect x="2" y="7" width="34" height="12" rx="5" fill="currentColor"/><path d="M9 8 13 2h12l5 6Z" fill="currentColor"/><path d="M14 4h4v4h-6ZM20 4h4l3 4h-7Z" fill="#cfe3ff"/><circle cx="10" cy="19" r="4" fill="#111a2e"/><circle cx="29" cy="19" r="4" fill="#111a2e"/></svg></span><span class="ruta-meta">🏁</span></div>`;
+  const estrellas = p => { const n = p >= .95 ? 3 : p >= .8 ? 2 : p >= .6 ? 1 : 0; return `<div class="estrellas" aria-label="${n} de 3 estrellas">${[0, 1, 2].map(k => `<span class="${k < n ? 'on' : ''}" style="animation-delay:${.25 + k * .25}s">${ico('estrella')}</span>`).join('')}</div>`; };
   const ANIMOS_OK = ['¡Correcto!', '¡Bien visto!', '¡Exacto!', '¡Eso es!', '¡Perfecto!'];
   const ANIMOS_BAD = ['Casi. Mira por qué:', 'Esta es traicionera:', 'Ahora ya no se te olvida:'];
   function nombreSesion(s) {
@@ -611,6 +618,7 @@
     <div class="view sesion stack" style="--gap:20px">
       <section class="card pad-l fin-card" style="text-align:center;display:grid;gap:14px;justify-items:center">
         <div class="fin-semi">${mascota(humor, 104)}</div>
+        ${s.modo === 'contrarreloj' ? '' : estrellas(p)}
         <span class="eyebrow">${esc(nombreSesion(s))}</span>
         <h1 class="h-l">${titulo}</h1>
         <p class="lead">${msg}</p>
@@ -914,10 +922,15 @@
     <div class="view stack" style="--gap:22px">
       <div class="page-head"><div class="stack"><span class="eyebrow">Logros</span><h1 class="h-l">Nivel ${nv.n} · ${got} de ${M.LOGROS.length} logros</h1><p class="muted">Ganas XP con cada respuesta (+10 si aciertas, +2 si fallas), al cumplir el objetivo diario (+30), con el reto del día (+50) y con los simulacros (+50, +100 si apruebas).</p></div></div>
       <div class="card"><div class="level"><span class="level-badge num">${nv.n}</span><div class="stack" style="--gap:8px"><div class="row" style="justify-content:space-between"><b>${nf.format(nv.xp)} XP</b><span class="small muted">${nf.format(nv.hasta - nv.xp)} para el nivel ${nv.n + 1}</span></div>${barra(nv.pct)}</div></div></div>
+      <section class="card garaje"><div class="section-head"><h2 class="h-m">${ico('estrella')} Garaje de Semi</h2><span class="small muted">Sube de nivel para desbloquear complementos</span></div>
+        <div class="garaje-grid">${ACCESORIOS.map(a => { const libre = nv.n >= a.nivel, puesto = (M.S.ajustes.accesorio || '') === a.id; return `<button class="garaje-item ${puesto ? 'puesto' : ''}" ${libre ? `data-acc="${a.id}"` : 'disabled'} aria-pressed="${puesto}">${mascota(puesto ? 'celebra' : 'feliz', 64, a.id)}<b>${a.nombre}</b><span class="tiny ${libre ? 'muted' : ''}">${libre ? (puesto ? 'Puesto' : 'Desbloqueado') : `${ico('candado', 'style="width:12px;height:12px;display:inline;vertical-align:-2px"')} Nivel ${a.nivel}`}</span></button>`; }).join('')}</div>
+      </section>
       <div class="grid g-3 reveal">${M.LOGROS.map(l => { const t = M.S.logros[l.id]; return `<div class="card ach ${t ? 'got' : ''}"><span class="ach-ico">${ico(l.ico)}</span><div><b>${l.nombre}</b><div class="small muted">${l.desc}</div>${t ? `<div class="tiny" style="color:var(--ok);margin-top:4px;font-weight:700">Conseguido el ${new Date(t).toLocaleDateString('es-ES')}</div>` : ''}</div></div>`; }).join('')}</div>
       ${pie()}
     </div>`;
   };
+
+  V.logros.montar = () => $$('[data-acc]').forEach(b => b.addEventListener('click', () => { M.S.ajustes.accesorio = b.dataset.acc; M.guardar(); sonar('combo'); render(); }));
 
   /* ---------- Más (móvil) ---------- */
   V.mas = function () {
